@@ -28,6 +28,8 @@
         {{> verses}}
       </div>
 
+      {{> memorization}}
+
       <div class="footer">
         <p>&copy; Johann Chen 2014</p>
       </div>
@@ -42,10 +44,9 @@
   
   <input type="text" class="form-control" id="new-verse" placeholder="New Verse Reference">
   
-  <div class="row marketing">
-    
+  <div class="row marketing">   
     {{#each verses}}
-    {{> verse}}
+      {{> verse}}
     {{/each}}     
   </div>
 </template>
@@ -55,9 +56,36 @@
     <article class="thumbnail">
       <header>
         <strong>{{title}}</strong>
+        <span class="badge memorize pointer" title="memorize" data-toggle="modal" data-target="#verseModal">{{memorized}}</span>
         <button class="btn btn-large close pull-right destroy">x</button>    
       </header>
-      <p>{{content}}</p>  
+      <p>{{content}}</p> 
     </article>
+  </div>
+</template>
+
+<template name="memorization">
+  <!-- Modal -->
+  <div class="modal fade" id="verseModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title" id="myModalLabel">{{title}}</h4>
+        </div>
+        <div class="modal-body">
+          <textarea id="typedVerse" class="form-control" rows="3" placeholder="type verse to memorize"></textarea>
+          <p id="diff">{{diff}}</p>
+        </div>
+        <div class="modal-footer">
+          <!--
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        -->
+          <button type="button" class="btn btn-default" id="tryAgain">Try again</button>
+          <button type="button" class="btn btn-primary" id="submitVerse">Submit</button>
+          <button type="button" class="btn btn-default" id="startOver">Reset</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>

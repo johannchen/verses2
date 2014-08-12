@@ -38,11 +38,12 @@ Template.verses.events(okCancelEvents(
 	{
 		ok: function(text, evt) {
 			Meteor.call("getESV", text, function(err, res) {
-				Session.set('v', res.content);
+				var v = res.content.trim();
+				Session.set('v', v);
 			});
 			
 			setTimeout(function() {
-				console.log(Session.get('v'));
+				//console.log(Session.get('v'));
 				Verses.insert({
 					title: text,
 					content: Session.get('v'),
@@ -56,16 +57,83 @@ Template.verses.events(okCancelEvents(
 	}));
 
 Template.verses.verses = function() {
-	return Verses.find();
+	return Verses.find({}, {sort: {created_at: -1}});
 };
 
 
 /////// Verse /////////
+function diffText(text1, text2) {
+	var dmp = new diff_match_patch();
+	var d = dmp.diff_main(text1, text2);
+	dmp.diff_cleanupSemantic(d);
+	return dmp.diff_prettyHtml(d);
+};
+
 Template.verse.events = {
 	'click button.destroy': function() {
-		Verses.remove(this._id)
+		Verses.remove(this._id);
+	},
+	'click span.memorize': function() {
+		$("#tryAgain").hide();
+		$("#typedVerse").show().val('');
+		$("#submitVerse").show();
+		Session.set('currentVerse', this);
+		Session.set('diff', '');
+	},
+	
+};
+
+//////// Memorization ///////////////
+Template.memorization.title = function() {
+	if(typeof Session.get('currentVerse') === 'undefined') {
+		return '';
+	} else {
+		return Session.get('currentVerse').title;
 	}
 };
+
+Template.memorization.diff = function() {
+	if(typeof Session.get('diff') === 'undefined') {
+		return '';
+	} else {
+		return new Handlebars.SafeString(Session.get('diff'));
+	}
+};
+
+Template.memorization.events = {
+	'click button#startOver': function() {
+		$("#typedVerse").val('');
+	},
+	'click button#submitVerse': function() {
+		var verse = Session.get('currentVerse');
+		var typedVerse = $("#typedVerse").val();
+		if(verse.content === typedVerse) {
+			Verses.update({_id: Session.get('currentVerse')._id}, 
+				{
+					$inc: {memorized: 1},
+					$set: {last_memorized_at: (new Date()).getTime()}
+				});
+			// close modal
+			$("#verseModal").modal('hide');
+		} else {
+			$("#typedVerse").hide();
+			$("#submitVerse").hide();
+			$("#startOver").hide();
+			$("#tryAgain").show();
+			$("#diff").show();
+			var result = diffText(typedVerse, verse.content);
+			Session.set('diff', result);
+		}
+	},
+	'click button#tryAgain': function() {
+		$("#typedVerse").show();
+		$("#submitVerse").show();
+		$("#startOver").show();
+		$("#tryAgain").hide();
+		$("#diff").hide();
+	}
+};
+
 /*
 Meteor.call("getESV", function(err, res) {
 		Session.set('v', res.content);
