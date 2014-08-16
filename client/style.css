@@ -12,6 +12,10 @@ body {
   padding-left: 15px;
 }
 
+.marketing {
+  margin-top: 15px;
+}
+
 /* Custom page header */
 .header {
   border-bottom: 1px solid #e5e5e5;
@@ -51,14 +55,6 @@ body {
   font-size: 21px;
 }
 
-/* Supporting marketing content */
-.marketing {
-  margin: 40px 0;
-}
-.marketing p + h4 {
-  margin-top: 28px;
-}
-
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 768px) {
   /* Remove the padding we set earlier */
@@ -78,11 +74,88 @@ body {
   }
 }
 
-/* my css */
+/*********** my css ******************/
+#tag-filter {
+  padding-bottom: 10px;
+}
+
+#search {
+  padding-bottom: 15px;
+}
+
 .pointer {
   cursor: pointer;
 }
+
+/* white */
+.mverse0 {
+  background-color: #FFFFFF;
+}
+/* moccasin */
+.mverse1 {
+  background-color: #FFE4B5;
+}
+/* pink */
+.mverse2 {
+  background-color: #FFC0CB;
+}
+/* coral */
+.mverse3 {
+  background-color: #FF7F50;
+}
+/* khaki */ 
+.mverse4 {
+  background-color: #F0E68C;
+}
+/* tan */
+.mverse5 {
+  background-color: #D2B48C;
+}
+/* lightblue */
+.mverse6 {
+  background-color: #ADD8E6;
+}
+/* yellowgreen */
+.mverse7 {
+  background-color: #9ACD32;
+}
+/* orchid */
+.mverse8 {
+  background-color: #DA70D6;
+}
+/* orange */
+.mverse9 {
+  background-color: #FFA500;
+}
+/* limegreen */
+.mverse10 {
+  background-color: #32CD32;
+}
+
 /* modal backdrop to be pitch black */
 .in {
   background: rgba(0, 0, 0, 0.8);
+}
+
+.verse-header {
+  margin-bottom: 5px;
+}
+
+ul.tags {
+  display: inline;
+  margin-left: 1px;
+}
+
+.tags li {
+  display: inline;
+  list-style-type: none;
+  padding-right: 3px;
+}
+
+.tag .remove-tag {
+  display: none;
+}
+
+.tag:hover .remove-tag {
+  display: inline;
 }

@@ -7,3 +7,5 @@ standard-app-packages
 insecure
 bootstrap-3
 http
+moment
+flash-messages

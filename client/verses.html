@@ -25,6 +25,7 @@
       </div>
 
       <div id="main-pane">
+        {{> tag_filter}}
         {{> verses}}
       </div>
 
@@ -41,8 +42,21 @@
 </body>
 
 <template name="verses">
-  
-  <input type="text" class="form-control" id="new-verse" placeholder="New Verse Reference">
+  <div class="row" id="search">
+    <div class="col-lg-6">
+    <input type="text" class="form-control" id="new-verse" list="bible" placeholder="New Verse Reference">
+    <datalist id="bible">
+      {{#each books}}
+        <option value="{{book}}"></option>
+      {{/each}}
+    </datalist>
+    </div>
+    <div class="col-lg-6">
+      Search:
+    </div>
+  </div>
+    
+  {{> flashMessages}}
   
   <div class="row marketing">   
     {{#each verses}}
@@ -53,11 +67,26 @@
 
 <template name="verse">
   <div class="col-lg-12">
-    <article class="thumbnail">
-      <header>
+    <article class="thumbnail mverse{{memorized}}">
+      <header class="verse-header">
         <strong>{{title}}</strong>
-        <span class="badge memorize pointer" title="memorize" data-toggle="modal" data-target="#verseModal">{{memorized}}</span>
-        <button class="btn btn-large close pull-right destroy">x</button>    
+        <span class="badge memorize pointer" title="last memorized at {{formatDate last_memorized_at "short"}}" data-toggle="modal" data-target="#verseModal">{{memorized}}</span>
+        {{#if addingTag}}
+          <span><input type="text" id="newTag" placeholder="new tag" value="" /></span>
+        {{else}}
+          <span class="glyphicon glyphicon-plus pointer add-tag" title="add tag"></span>
+        {{/if}}
+        <ul class="list-inline tags">
+          {{#each verseTags}}
+            <li>
+              <span class="label label-primary tag">{{tag}}
+                <span class="pointer remove-tag">&times;</span>
+              </span>
+            </li>
+          {{/each}}
+          
+        </ul>
+        <button type="button" class="close"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>    
       </header>
       <p>{{content}}</p> 
     </article>
@@ -87,5 +116,20 @@
         </div>
       </div>
     </div>
+  </div>
+</template>
+
+<template name="tag_filter">
+  <div id="tag-filter">
+    Show: 
+    <ul class="list-inline tags">
+      {{#each tags}}
+        <li>
+          <span class="label label-{{selected}} tag pointer">
+            {{tag_text}} <span class="count">({{count}})</span>
+          </span>
+        </li>
+      {{/each}}
+    </ul>
   </div>
 </template>
