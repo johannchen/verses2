@@ -75,12 +75,8 @@ body {
 }
 
 /*********** my css ******************/
-#tag-filter {
+.filter {
   padding-bottom: 10px;
-}
-
-#search {
-  padding-bottom: 15px;
 }
 
 .pointer {

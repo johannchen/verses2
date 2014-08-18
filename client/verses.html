@@ -26,6 +26,7 @@
 
       <div id="main-pane">
         {{> tag_filter}}
+        {{> mem_filter}}
         {{> verses}}
       </div>
 
@@ -42,17 +43,19 @@
 </body>
 
 <template name="verses">
-  <div class="row" id="search">
+  <p><span class="search-term pointer"><u><em>{{search}}</em></u></span>
+   Results: <strong>{{count}}</strong></p>
+  <div class="row">
     <div class="col-lg-6">
-    <input type="text" class="form-control" id="new-verse" list="bible" placeholder="New Verse Reference">
-    <datalist id="bible">
-      {{#each books}}
-        <option value="{{book}}"></option>
-      {{/each}}
-    </datalist>
+      <input type="text" class="form-control" id="search" placeholder="Search Verse">
     </div>
     <div class="col-lg-6">
-      Search:
+      <input type="text" class="form-control" id="new-verse" list="bible" placeholder="New Verse Reference">
+      <datalist id="bible">
+        {{#each books}}
+          <option value="{{book}}"></option>
+        {{/each}}
+      </datalist>
     </div>
   </div>
     
@@ -120,15 +123,28 @@
 </template>
 
 <template name="tag_filter">
-  <div id="tag-filter">
-    Show: 
+  <div id="tag-filter" class="filter">
     <ul class="list-inline tags">
       {{#each tags}}
         <li>
           <span class="label label-{{selected}} tag pointer">
-            {{tag_text}} <span class="count">({{count}})</span>
+            {{tag}}
           </span>
         </li>
+      {{/each}}
+    </ul>
+  </div>
+  
+</template>
+
+<template name="mem_filter">
+  <div id="mem-filter" class="filter">
+    <ul class="list-inline tags">
+      {{#each tags}}
+      <li>
+        <span class="label label-{{selected}} pointer tag">{{tag}}
+        </span>
+      </li>
       {{/each}}
     </ul>
   </div>

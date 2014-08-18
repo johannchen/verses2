@@ -7,7 +7,12 @@ Deps.autorun(function() {
 // When adding tag to a verse, ID of the verse
 Session.setDefault('editingAddTag', null);
 // Name of currently selected tag for filtering
-Session.setDefault('tagFilter', null);
+Session.setDefault('tagFilter', 'All');
+// Name of memorzied filter
+Session.setDefault('memorizedFilter', 'All');
+// Search text
+Session.setDefault('search', null);
+
 
 ////////// UI Helpers ////////////////////////////
 
@@ -59,6 +64,69 @@ var activateInput = function(input) {
 };
 
 //////// Verses //////////
+
+Template.verses.books = [
+	"Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy",
+  "Joshua", "Judges", "Ruth", "1 Samuel", "2 Samuel",
+	"1 Kings", "2 Kings", "1 Chronicles", "2 Chronicles",
+  "Ezra", "Nehemiah", "Esther",
+  "Job", "Psalm", "Proverbs", "Ecclesiastes", "Song of Songs",
+  "Isaiah", "Jeremiah", "Lamentations", "Ezekiel", "Daniel",
+  "Hosea", "Joel", "Amos", "Obadiah", "Jonah", "Micah",
+  "Nahum", "Habakkuk", "Zephaniah", "Haggai", "Zechariah", "Malachi",
+  "Matthew", "Mark", "Luke", "John", "Acts",
+  "Romans", "1 Corinthians", "2 Corinthians", "Galatians", "Ephesians",
+  "Philippians", "Colossians", "1 Thessalonians", "2 Thessalonians",
+  "1 Timothy", "2 Timothy", "Titus", "Philemon",
+  "Hebrews", "James", "1 Peter", "2 Peter",
+  "1 John", "2 John", "3 John", "Jude", "Revelation"
+];
+
+Template.verses.book = function() {
+	return this;
+};
+
+Template.verses.verses = function() {
+	var selector = {};
+	var tagFilter = Session.get('tagFilter');
+	var memFilter = Session.get('memorizedFilter');
+	var searchFilter = Session.get('search');
+	
+	if(tagFilter !== 'All')
+		selector.tags = tagFilter;
+
+	if(memFilter === 'All')
+		selector.memorized = {$gte: 0};
+	else if(memFilter === 'New')
+		selector.memorized = 0;
+	else
+		selector.memorized = {$gt: 0};
+
+	if(searchFilter) {
+		selector.content = {$regex: searchFilter, $options: 'i'};
+		//selector.content = "/.*" + searchFilter + ".*/i";
+	}
+
+
+	Session.set('verseCount', Verses.find(selector).count());
+
+	return Verses.find(selector, {sort: {created_at: -1}});
+};
+
+Template.verses.search = function() {
+	return Session.get('search');
+};
+
+Template.verses.count = function() {
+	return Session.get('verseCount');
+};
+
+Template.verses.events({
+	'click .search-term': function() {
+		Session.set('search', null);
+	}
+});
+
 Template.verses.events(okCancelEvents(
 	'#new-verse',
 	{
@@ -86,35 +154,15 @@ Template.verses.events(okCancelEvents(
 		}
 	}));
 
-Template.verses.books = [
-	"Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy",
-  "Joshua", "Judges", "Ruth", "1 Samuel", "2 Samuel",
-	"1 Kings", "2 Kings", "1 Chronicles", "2 Chronicles",
-  "Ezra", "Nehemiah", "Esther",
-  "Job", "Psalm", "Proverbs", "Ecclesiastes", "Song of Songs",
-  "Isaiah", "Jeremiah", "Lamentations", "Ezekiel", "Daniel",
-  "Hosea", "Joel", "Amos", "Obadiah", "Jonah", "Micah",
-  "Nahum", "Habakkuk", "Zephaniah", "Haggai", "Zechariah", "Malachi",
-  "Matthew", "Mark", "Luke", "John", "Acts",
-  "Romans", "1 Corinthians", "2 Corinthians", "Galatians", "Ephesians",
-  "Philippians", "Colossians", "1 Thessalonians", "2 Thessalonians",
-  "1 Timothy", "2 Timothy", "Titus", "Philemon",
-  "Hebrews", "James", "1 Peter", "2 Peter",
-  "1 John", "2 John", "3 John", "Jude", "Revelation"
-];
+Template.verses.events(okCancelEvents(
+	'#search',
+	{
+		ok: function(text, evt) {
+			Session.set('search', text);
+			evt.target.value = '';
+		}
+	}));
 
-Template.verses.book = function() {
-	return this;
-};
-
-Template.verses.verses = function() {
-	var selector = {};
-	var tagFilter = Session.get('tagFilter');
-	if(tagFilter)
-		selector.tags = tagFilter;
-
-	return Verses.find(selector, {sort: {created_at: -1}});
-};
 
 
 /////// Verse /////////
@@ -131,6 +179,10 @@ Template.verse.verseTags = function() {
 		return {verse_id: verse_id, tag: tag};
 	});
 };
+
+Template.verse.tag = function() {
+	return this.tag;
+}
 
 Template.verse.addingTag = function() {
 	return Session.equals('editingAddTag', this._id);
@@ -149,7 +201,7 @@ Template.verse.events({
 	},
 	'click .add-tag': function(evt, tmpl) {
 		Session.set('editingAddTag', this._id);
-		Deps.flush(); // update DOM before focus
+		Deps.flush(); // update DOM before focus?
 		activateInput(tmpl.find("#newTag"));
 	},
 	'click .remove-tag': function() {
@@ -228,6 +280,7 @@ Template.memorization.events = {
 
 // pick out the unquie tags from all verses
 Template.tag_filter.tags = function() {
+	/*
 	var tagInfos = [];
 	var totalCount = 0;
 
@@ -244,25 +297,56 @@ Template.tag_filter.tags = function() {
 
 	tagInfos.unshift({tag: null, count: totalCount});
 	return tagInfos;
+	*/
+	var tags = [];
+	Verses.find().forEach(function(verse) {
+		_.each(verse.tags, function(tag) {
+			if(tags.indexOf(tag) === -1)
+				tags.push(tag);
+		});
+	});
+	tags = _.sortBy(tags, function(x) {return x;});
+	tags.unshift("All");
+	return tags;
 };
 
-Template.tag_filter.tag_text = function() {
-	return this.tag || "All";
+Template.tag_filter.tag = function() {
+	return this;
 };
 
 Template.tag_filter.selected = function() {
-	return Session.equals('tagFilter', this.tag) ? 'primary' : 'default';
+	return Session.equals('tagFilter', String(this)) ? 'primary' : 'default';
 };
 
 Template.tag_filter.events({
 	'mousedown .tag': function() {
-		if(Session.equals('tagFilter', this.tag))
-			Session.set('tagFilter', null);
+		if(Session.equals('tagFilter', String(this)))
+			Session.set('tagFilter', 'All');
 		else
-			Session.set('tagFilter', this.tag);
+			Session.set('tagFilter', String(this));
 	}
-})
+});
 
+///////////////// Mem Filter /////////////////////
+
+Template.mem_filter.tags = ['All', 'Memorized', 'New'];
+
+Template.mem_filter.tag = function() {
+	return this;
+};
+
+Template.mem_filter.selected = function() {
+	return Session.equals('memorizedFilter', String(this)) ? 'success' : 'default';
+};
+
+Template.mem_filter.events({
+	'mousedown .tag': function() {
+		if(Session.equals('memorizedFilter', String(this)))
+			Session.set('memorizedFilter', 'All');
+		else
+			Session.set('memorizedFilter', String(this));
+	}
+});
 /*
 Meteor.call("getESV", function(err, res) {
 		Session.set('v', res.content);
