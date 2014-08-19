@@ -137,8 +137,11 @@ Template.verses.events(okCancelEvents(
 					var v = res.content.trim();
 					Session.set('v', v);
 
+					var userId = Meteor.userId();
+
 					//setTimeout(function() {
 						Verses.insert({
+							owner: userId,
 							title: text,
 							content: Session.get('v'),
 							memorized: 0,

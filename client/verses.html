@@ -18,19 +18,22 @@
     <div class="container">
       <div class="header">
         <ul class="nav nav-pills pull-right">
-          <li class="active"><a href="#">New</a></li>
-          <li><a href="#">About</a></li>
+          <li>{{> loginButtons align="right"}}</li>
         </ul>
         <h3 class="text-muted">Verses</h3>
       </div>
 
-      <div id="main-pane">
-        {{> tag_filter}}
-        {{> mem_filter}}
-        {{> verses}}
-      </div>
+      {{#if currentUser}}
+        <div id="main-pane">
+          {{> tag_filter}}
+          {{> mem_filter}}
+          {{> verses}}
+        </div>
 
-      {{> memorization}}
+        {{> memorization}}
+      {{else}}
+        <p>Welcome to Verses!</p>
+      {{/if}}
 
       <div class="footer">
         <p>&copy; Johann Chen 2014</p>

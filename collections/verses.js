@@ -11,3 +11,16 @@ Verse.prototype = {
 Verses = new Meteor.Collection("verses", {
 	transform: function(doc) { return new Verse(doc); }
 });
+
+Verses.allow({
+	insert: function(userId, verse) {
+		// only allow if you are logged in
+		return !!userId;
+
+	},
+	remove: function(userId, verse) {
+		// only owner can remove, 
+		//TODO: and there is no comments
+		return verse.owner === userId; 
+	}
+});
