@@ -87,30 +87,34 @@ Template.verses.book = function() {
 };
 
 Template.verses.verses = function() {
-	var selector = {};
-	var tagFilter = Session.get('tagFilter');
-	var memFilter = Session.get('memorizedFilter');
-	var searchFilter = Session.get('search');
-	
-	if(tagFilter !== 'All')
-		selector.tags = tagFilter;
+	//TODO: deny client find on console?
+	var userId = Meteor.userId();
+	if(userId) {
+		var selector = {owner: userId};
+		var tagFilter = Session.get('tagFilter');
+		var memFilter = Session.get('memorizedFilter');
+		var searchFilter = Session.get('search');
+		
+		if(tagFilter !== 'All')
+			selector.tags = tagFilter;
 
-	if(memFilter === 'All')
-		selector.memorized = {$gte: 0};
-	else if(memFilter === 'New')
-		selector.memorized = 0;
-	else
-		selector.memorized = {$gt: 0};
+		if(memFilter === 'All')
+			selector.memorized = {$gte: 0};
+		else if(memFilter === 'New')
+			selector.memorized = 0;
+		else
+			selector.memorized = {$gt: 0};
 
-	if(searchFilter) {
-		selector.content = {$regex: searchFilter, $options: 'i'};
-		//selector.content = "/.*" + searchFilter + ".*/i";
+		if(searchFilter) {
+			selector.content = {$regex: searchFilter, $options: 'i'};
+			//selector.content = "/.*" + searchFilter + ".*/i";
+		}
+
+
+		Session.set('verseCount', Verses.find(selector).count());
+
+		return Verses.find(selector, {sort: {created_at: -1}});
 	}
-
-
-	Session.set('verseCount', Verses.find(selector).count());
-
-	return Verses.find(selector, {sort: {created_at: -1}});
 };
 
 Template.verses.search = function() {
@@ -131,13 +135,12 @@ Template.verses.events(okCancelEvents(
 	'#new-verse',
 	{
 		ok: function(text, evt) {
-			var verse = Verses.findOne({title: text});
+			var userId = Meteor.userId();
+			var verse = Verses.findOne({owner: userId, title: text});
 			if(typeof verse === 'undefined') {
 				Meteor.call("getESV", text, function(err, res) {
 					var v = res.content.trim();
 					Session.set('v', v);
-
-					var userId = Meteor.userId();
 
 					//setTimeout(function() {
 						Verses.insert({
@@ -302,7 +305,8 @@ Template.tag_filter.tags = function() {
 	return tagInfos;
 	*/
 	var tags = [];
-	Verses.find().forEach(function(verse) {
+	var userId = Meteor.userId();
+	Verses.find({owner: userId}).forEach(function(verse) {
 		_.each(verse.tags, function(tag) {
 			if(tags.indexOf(tag) === -1)
 				tags.push(tag);

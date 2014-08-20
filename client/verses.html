@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="">
   <meta name="author" content="">
-  <title>Verses</title>
+  <title>Verses Memorization</title>
 
   <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!--[if lt IE 9]>
@@ -17,10 +17,10 @@
 
     <div class="container">
       <div class="header">
-        <ul class="nav nav-pills pull-right">
-          <li>{{> loginButtons align="right"}}</li>
-        </ul>
-        <h3 class="text-muted">Verses</h3>
+        <div class="pull-right">
+          {{> loginButtons align="right"}}
+        </div>
+        <h3 class="text-muted">Verses Memorization</h3>
       </div>
 
       {{#if currentUser}}
@@ -32,7 +32,7 @@
 
         {{> memorization}}
       {{else}}
-        <p>Welcome to Verses!</p>
+        <p>Verses Memorization helps you to memorize Bible verses by typing. May your heart and mind be filled with God's words, which you can put to good use in time of need.</p>
       {{/if}}
 
       <div class="footer">

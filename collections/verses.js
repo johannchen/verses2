@@ -18,6 +18,9 @@ Verses.allow({
 		return !!userId;
 
 	},
+	update: function(userId, verse, fieldNames, modifier) {
+		return verse.owner === userId;
+	},
 	remove: function(userId, verse) {
 		// only owner can remove, 
 		//TODO: and there is no comments
