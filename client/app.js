@@ -139,7 +139,7 @@ Template.verses.events(okCancelEvents(
 			var verse = Verses.findOne({owner: userId, title: text});
 			if(typeof verse === 'undefined') {
 				Meteor.call("getESV", text, function(err, res) {
-					var v = res.content.trim();
+					var v = res.content.trim().replace(/\s{2,}/g, ' ');
 					Session.set('v', v);
 
 					//setTimeout(function() {
