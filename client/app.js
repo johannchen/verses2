@@ -12,6 +12,8 @@ Session.setDefault('tagFilter', 'All');
 Session.setDefault('memorizedFilter', 'All');
 // Search text
 Session.setDefault('search', null);
+// Book Filter
+Session.setDefault('bookFilter', null);
 
 
 ////////// UI Helpers ////////////////////////////
@@ -94,6 +96,7 @@ Template.verses.verses = function() {
 		var tagFilter = Session.get('tagFilter');
 		var memFilter = Session.get('memorizedFilter');
 		var searchFilter = Session.get('search');
+		var bookFilter = Session.get('bookFilter');
 		
 		if(tagFilter !== 'All')
 			selector.tags = tagFilter;
@@ -105,11 +108,12 @@ Template.verses.verses = function() {
 		else
 			selector.memorized = {$gt: 0};
 
-		if(searchFilter) {
+		if(searchFilter) 
 			selector.content = {$regex: searchFilter, $options: 'i'};
 			//selector.content = "/.*" + searchFilter + ".*/i";
-		}
 
+		if(bookFilter) 
+			selector.title = {$regex: bookFilter};
 
 		Session.set('verseCount', Verses.find(selector).count());
 
@@ -128,6 +132,12 @@ Template.verses.count = function() {
 Template.verses.events({
 	'click .search-term': function() {
 		Session.set('search', null);
+	},
+	'change #book': function(evt, tmpl) {
+		var book = tmpl.find('#book').value;
+		if(book === "")
+			book = null;
+		Session.set('bookFilter', book);
 	}
 });
 
