@@ -25,6 +25,7 @@
 
       {{#if currentUser}}
         <div id="main-pane">
+          {{> goal}}
           {{> tag_filter}}
           {{> mem_filter}}
           {{> verses}}
@@ -32,7 +33,7 @@
 
         {{> memorization}}
       {{else}}
-        <p>Verses Memorization helps you to memorize Bible verses by typing. May your heart and mind be filled with God's words, which you can put to good use in time of need.</p>
+        {{> about}}
       {{/if}}
 
       <div class="footer">
@@ -46,8 +47,7 @@
 </body>
 
 <template name="verses">
-  <p><span class="search-term pointer"><u><em>{{search}}</em></u></span>
-   Results: <strong>{{count}}</strong></p>
+
   <div class="row">
     <div class="col-lg-3">
       <select class="form-control" id="book">
@@ -58,7 +58,7 @@
       </select>
     </div>
     <div class="col-lg-3">
-      <input type="text" class="form-control" id="search" placeholder="Search Verse">
+      <input type="text" class="form-control" id="search" placeholder="Search Verses">
     </div>
     <div class="col-lg-6">
       <input type="text" class="form-control" id="new-verse" list="bible" placeholder="New Verse Reference">
@@ -69,7 +69,7 @@
       </datalist>
     </div>
   </div>
-    
+
   {{> flashMessages}}
   
   <div class="row marketing">   
@@ -133,6 +133,14 @@
   </div>
 </template>
 
+<template name="goal">
+  <div class="progress">
+    <div class="progress-bar" role="progressbar" aria-valuenow="{{memCount}}" aria-valuemin="0" aria-valuemax="{{total}}" style="width: {{percentage}}%;">
+      {{percentage}}%
+    </div>
+  </div>
+</template>   
+
 <template name="tag_filter">
   <div id="tag-filter" class="filter">
     <ul class="list-inline tags">
@@ -157,6 +165,16 @@
         </span>
       </li>
       {{/each}}
+      <li>
+        <span class="search-term pointer"><u><em>{{search}}</em></u></span> Results: <strong>{{count}}</strong>
+      </li>
     </ul>
   </div>
+</template>
+
+<template name="about">
+  <p>Verses Memorization helps you to memorize Bible verses by typing. May your heart and mind be filled with God's words, which you can put to good use in time of need.</p>
+  <p>This application is developed by Johann Chen. He is available as a freelancer to work on any web application project using  <a href="https://www.meteor.com/">Meteor</a> or <a href="http://rubyonrails.org/">Ruby on Rails</a>. He is passionate about writing web applications for churches or for any good cause. He along with his wife and two young daughters are involved in medical missions overseas. If you are led by the Spirit to support them financially, please email Johann at johannchen @ gmail.com</p>
+  <p>Also if you have any feedback about the applicaiton, please email Johann. Hope you find this applicaiton helpful, and God bless you!</p>
+  <p>Scripture taken from The Holy Bible, English Standard Version. Copyright ©2001 by <a href="http://www.crossway.org/bibles/">Crossway Bibles</a>, a publishing ministry of Good News Publishers. Used by permission. All rights reserved. Text provided by the <a href="http://www.esvapi.org/">Crossway Bibles Web Service</a>.</p>
 </template>

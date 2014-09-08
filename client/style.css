@@ -155,3 +155,7 @@ ul.tags {
 .tag:hover .remove-tag {
   display: inline;
 }
+
+.result {
+  float: right;
+}

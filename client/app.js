@@ -14,6 +14,12 @@ Session.setDefault('memorizedFilter', 'All');
 Session.setDefault('search', null);
 // Book Filter
 Session.setDefault('bookFilter', null);
+// memorized count
+Session.setDefault('memCount', 0);
+// total verses count
+Session.setDefault('totalCount', 0);
+
+var userId = Meteor.userId();
 
 
 ////////// UI Helpers ////////////////////////////
@@ -90,8 +96,11 @@ Template.verses.book = function() {
 
 Template.verses.verses = function() {
 	//TODO: deny client find on console?
-	var userId = Meteor.userId();
 	if(userId) {
+		// set goal stat?
+		Session.set('memCount', Verses.find({owner: userId, memorized: {$gt: 0}}).count());
+		Session.set('totalCount', Verses.find({owner: userId}).count());
+
 		var selector = {owner: userId};
 		var tagFilter = Session.get('tagFilter');
 		var memFilter = Session.get('memorizedFilter');
@@ -121,14 +130,6 @@ Template.verses.verses = function() {
 	}
 };
 
-Template.verses.search = function() {
-	return Session.get('search');
-};
-
-Template.verses.count = function() {
-	return Session.get('verseCount');
-};
-
 Template.verses.events({
 	'click .search-term': function() {
 		Session.set('search', null);
@@ -145,7 +146,6 @@ Template.verses.events(okCancelEvents(
 	'#new-verse',
 	{
 		ok: function(text, evt) {
-			var userId = Meteor.userId();
 			var verse = Verses.findOne({owner: userId, title: text});
 			if(typeof verse === 'undefined') {
 				Meteor.call("getESV", text, function(err, res) {
@@ -315,7 +315,6 @@ Template.tag_filter.tags = function() {
 	return tagInfos;
 	*/
 	var tags = [];
-	var userId = Meteor.userId();
 	Verses.find({owner: userId}).forEach(function(verse) {
 		_.each(verse.tags, function(tag) {
 			if(tags.indexOf(tag) === -1)
@@ -356,6 +355,14 @@ Template.mem_filter.selected = function() {
 	return Session.equals('memorizedFilter', String(this)) ? 'success' : 'default';
 };
 
+Template.mem_filter.search = function() {
+	return Session.get('search');
+};
+
+Template.mem_filter.count = function() {
+	return Session.get('verseCount');
+};
+
 Template.mem_filter.events({
 	'mousedown .tag': function() {
 		if(Session.equals('memorizedFilter', String(this)))
@@ -364,6 +371,24 @@ Template.mem_filter.events({
 			Session.set('memorizedFilter', String(this));
 	}
 });
+
+Template.goal.helpers({
+	memCount: function() {
+		return Session.get('memCount');
+	},
+	total: function() {
+		return Session.get('totalCount');
+	},
+	percentage: function() {
+		// if there simplier way to do property cal?
+		var memCount = Session.get('memCount');
+		var totalCount = Session.get('totalCount');
+		return memCount / totalCount * 100;
+	}
+});
+
+
+
 /*
 Meteor.call("getESV", function(err, res) {
 		Session.set('v', res.content);
