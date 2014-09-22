@@ -383,6 +383,8 @@ Template.goal.helpers({
 		// if there simplier way to do property cal?
 		var memCount = Session.get('memCount');
 		var totalCount = Session.get('totalCount');
+		if(memCount === 0)
+			return 0;
 		return memCount / totalCount * 100;
 	}
 });
