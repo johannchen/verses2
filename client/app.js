@@ -385,7 +385,7 @@ Template.goal.helpers({
 		var totalCount = Session.get('totalCount');
 		if(memCount === 0)
 			return 0;
-		return memCount / totalCount * 100;
+		return Math.round(memCount / totalCount * 100);
 	}
 });
 
