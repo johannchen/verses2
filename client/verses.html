@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="">
   <meta name="author" content="">
-  <title>Verses Memorization</title>
+  <title>Verses</title>
 
   <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!--[if lt IE 9]>
@@ -20,7 +20,7 @@
         <div class="pull-right">
           {{> loginButtons align="right"}}
         </div>
-        <h3 class="text-muted">Verses Memorization</h3>
+        <h3 class="text-muted">Verses</h3>
       </div>
 
       {{#if currentUser}}
@@ -84,11 +84,10 @@
     <article class="thumbnail mverse{{memorized}}">
       <header class="verse-header">
         <strong>{{title}}</strong>
-        <span class="badge memorize pointer" title="last memorized at {{formatDate last_memorized_at "short"}}" data-toggle="modal" data-target="#verseModal">{{memorized}}</span>
         {{#if addingTag}}
-          <span><input type="text" id="newTag" placeholder="new tag" value="" /></span>
+          <span class="add-tag"><input type="text" id="newTag" placeholder="new tag" value="" /></span>
         {{else}}
-          <span class="glyphicon glyphicon-plus pointer add-tag" title="add tag"></span>
+          <span class="glyphicon glyphicon-th-large pointer add-tag" title="add tag"></span>
         {{/if}}
         <ul class="list-inline tags">
           {{#each verseTags}}
@@ -97,12 +96,21 @@
                 <span class="pointer remove-tag">&times;</span>
               </span>
             </li>
-          {{/each}}
-          
+          {{/each}}          
         </ul>
         <button type="button" class="close"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>    
       </header>
-      <p>{{content}}</p> 
+      <p>{{content}}</p>
+      <p>
+        <a href="#" class="btn btn-default btn-xs memorize" title="to memorize" data-toggle="modal" data-target="#verseModal"><span class="glyphicon glyphicon-star"></span> {{memorized}}</a>
+        <ul class="list-inline stars">
+          {{#each memorizations}}
+            <li>
+              <span class="glyphicon glyphicon-star-empty" title="memorized at {{formatDate memorization "long"}}"></span>
+            </li>
+          {{/each}}
+        </ul>       
+      </p> 
     </article>
   </div>
 </template>
@@ -173,7 +181,7 @@
 </template>
 
 <template name="about">
-  <p>Verses Memorization helps you to memorize Bible verses by typing. May your heart and mind be filled with God's words, which you can put to good use in time of need.</p>
+  <p>Verses helps you to organize and memorize your favorite Bible verses. May your heart and mind be filled with God's words, which you can put to good use in time of need.</p>
   <p>This application is developed by Johann Chen. He is available as a freelancer to work on any web application project using  <a href="https://www.meteor.com/">Meteor</a> or <a href="http://rubyonrails.org/">Ruby on Rails</a>. He is passionate about writing web applications for churches or for any good cause. He along with his wife and two young daughters are involved in medical missions overseas. If you are led by the Spirit to support them financially, please email Johann at johannchen at gmail.com</p>
   <p>Also if you have any feedback about the applicaiton, please email Johann. Hope you find this applicaiton helpful, and God bless you!</p>
   <p>Scripture taken from The Holy Bible, English Standard Version. Copyright ©2001 by <a href="http://www.crossway.org/bibles/">Crossway Bibles</a>, a publishing ministry of Good News Publishers. Used by permission. All rights reserved. Text provided by the <a href="http://www.esvapi.org/">Crossway Bibles Web Service</a>.</p>

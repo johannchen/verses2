@@ -200,6 +200,10 @@ Template.verse.tag = function() {
 	return this.tag;
 }
 
+Template.verse.memorization = function() {
+	return this.memorized_at;
+}
+
 Template.verse.addingTag = function() {
 	return Session.equals('editingAddTag', this._id);
 };
@@ -208,7 +212,7 @@ Template.verse.events({
 	'click button.close': function() {
 		Verses.remove(this._id);
 	},
-	'click span.memorize': function() {
+	'click .memorize': function() {
 		$("#tryAgain").hide();
 		$("#typedVerse").show().val('');
 		$("#submitVerse").show();
@@ -267,8 +271,12 @@ Template.memorization.events = {
 		if(verse.content === typedVerse) {
 			Verses.update({_id: Session.get('currentVerse')._id}, 
 				{
-					$inc: {memorized: 1},
+					/*
+					
 					$set: {last_memorized_at: (new Date()).getTime()}
+					*/
+					$inc: {memorized: 1},
+					$push: {memorizations: {memorized_at: (new Date()).getTime()}}
 				});
 			// close modal
 			$("#verseModal").modal('hide');
@@ -345,7 +353,7 @@ Template.tag_filter.events({
 
 ///////////////// Mem Filter /////////////////////
 
-Template.mem_filter.tags = ['All', 'Memorized', 'New'];
+Template.mem_filter.tags = ['All', 'Star', 'New'];
 
 Template.mem_filter.tag = function() {
 	return this;

@@ -137,6 +137,18 @@ body {
   margin-bottom: 5px;
 }
 
+ul.stars {
+  display: inline;
+  margin-left: 1px;
+}
+
+.stars li {
+  display: inline;
+  list-style-type: none;
+  padding-right: 1px;
+  padding-left: 1px;
+}
+
 ul.tags {
   display: inline;
   margin-left: 1px;
@@ -154,6 +166,10 @@ ul.tags {
 
 .tag:hover .remove-tag {
   display: inline;
+}
+
+.add-tag {
+  padding-left: 3px;
 }
 
 .result {
