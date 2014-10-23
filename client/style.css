@@ -89,45 +89,44 @@ body {
   cursor: pointer;
 }
 
-/* white */
 .mverse0 {
   background-color: #FFFFFF;
 }
-/* moccasin */
+
 .mverse1 {
-  background-color: #FFE4B5;
+  background-color: #FFCCE5;
 }
-/* pink */
+
 .mverse2 {
-  background-color: #FFC0CB;
+  background-color: #FFCCCC;
 }
-/* coral */
+
 .mverse3 {
-  background-color: #FF7F50;
+  background-color: #E5CCFF;
 }
-/* khaki */ 
+
 .mverse4 {
-  background-color: #F0E68C;
+  background-color: #CCCCFF;
 }
-/* tan */
+
 .mverse5 {
-  background-color: #D2B48C;
+  background-color: #CCE5FF;
 }
-/* lightblue */
+
 .mverse6 {
-  background-color: #ADD8E6;
+  background-color: #CCFFFF;
 }
-/* yellowgreen */
+
 .mverse7 {
-  background-color: #9ACD32;
+  background-color: #FFE5CC;
 }
-/* orchid */
+
 .mverse8 {
-  background-color: #DA70D6;
+  background-color: #FFFFCC;
 }
-/* orange */
+
 .mverse9 {
-  background-color: #FFA500;
+  background-color: #CCFFCC;
 }
 /* limegreen */
 .mverse10 {

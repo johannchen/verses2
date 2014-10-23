@@ -34,11 +34,20 @@
 
         {{> memorization}}
       {{else}}
-        {{> about}}
+        {{> mission}}
       {{/if}}
 
+      {{> about}}
+
       <div class="footer">
-        <p>&copy; Johann Chen 2014</p>
+        <div class="row">
+           <div class="col-md-6">
+            &copy; Johann Chen 2014 
+           </div>
+           <div class="col-md-6 text-right">
+            <a href="#" data-toggle="modal" data-target="#aboutModal">About</a>
+           </div> 
+        </div>
       </div>
 
     </div> <!-- /container -->
@@ -132,9 +141,6 @@
           <p id="diff">{{diff}}</p>
         </div>
         <div class="modal-footer">
-          <!--
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        -->
           <button type="button" class="btn btn-default" id="tryAgain">Try again</button>
           <button type="button" class="btn btn-primary" id="submitVerse">Submit</button>
           <button type="button" class="btn btn-default" id="startOver">Reset</button>
@@ -147,7 +153,7 @@
 <template name="goal">
   <div class="progress">
     <div class="progress-bar" role="progressbar" aria-valuenow="{{memCount}}" aria-valuemin="0" aria-valuemax="{{total}}" style="width: {{percentage}}%;">
-      {{percentage}}%
+      {{percentage}}% Starred
     </div>
   </div>
 </template>   
@@ -196,9 +202,29 @@
   </span>
 </template>
 
-<template name="about">
+<template name="mission">
   <p>Verses helps you to organize and memorize your favorite Bible verses. May your heart and mind be filled with God's words, which you can put to good use in time of need.</p>
-  <p>This application is developed by Johann Chen. He is available as a freelancer to work on any web application project using  <a href="https://www.meteor.com/">Meteor</a> or <a href="http://rubyonrails.org/">Ruby on Rails</a>. He is passionate about writing web applications for churches or for any good cause. He along with his wife and two young daughters are involved in medical missions overseas. If you are led by the Spirit to support them financially, please email Johann at johannchen at gmail.com</p>
-  <p>Also if you have any feedback about the applicaiton, please email Johann. Hope you find this applicaiton helpful, and God bless you!</p>
-  <p>Scripture taken from The Holy Bible, English Standard Version. Copyright ©2001 by <a href="http://www.crossway.org/bibles/">Crossway Bibles</a>, a publishing ministry of Good News Publishers. Used by permission. All rights reserved. Text provided by the <a href="http://www.esvapi.org/">Crossway Bibles Web Service</a>.</p>
+</template>
+
+<template name="about">
+  <!-- Modal -->
+  <div class="modal fade" id="aboutModal" tabindex="-1" role="dialog" aria-labelledby="aboutModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title" id="aboutModalLabel">About Verses</h4>
+        </div>
+        <div class="modal-body">
+          <p>Verses helps you to organize and memorize your favorite Bible verses. May your heart and mind be filled with God's words, which you can put to good use in time of need.</p>
+          <p>This application is developed by Johann Chen. He is available as a freelancer to work on any web application project using  <a href="https://www.meteor.com/">Meteor</a> or <a href="http://rubyonrails.org/">Ruby on Rails</a>. He is passionate about writing web applications for churches or for any good cause. He along with his wife and two young daughters are involved in medical missions overseas. If you are led by the Spirit to support them financially, please email Johann at johannchen at gmail.com</p>
+          <p>Also if you have any feedback about the applicaiton, please email Johann. Hope you find this applicaiton helpful, and God bless you!</p>
+          <p>Scripture taken from The Holy Bible, English Standard Version. Copyright ©2001 by <a href="http://www.crossway.org/bibles/">Crossway Bibles</a>, a publishing ministry of Good News Publishers. Used by permission. All rights reserved. Text provided by the <a href="http://www.esvapi.org/">Crossway Bibles Web Service</a>.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
