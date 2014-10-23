@@ -73,67 +73,64 @@ var activateInput = function(input) {
 
 //////// Verses //////////
 
-Template.verses.books = [
-	"Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy",
-  "Joshua", "Judges", "Ruth", "1 Samuel", "2 Samuel",
-	"1 Kings", "2 Kings", "1 Chronicles", "2 Chronicles",
-  "Ezra", "Nehemiah", "Esther",
-  "Job", "Psalm", "Proverbs", "Ecclesiastes", "Song of Songs",
-  "Isaiah", "Jeremiah", "Lamentations", "Ezekiel", "Daniel",
-  "Hosea", "Joel", "Amos", "Obadiah", "Jonah", "Micah",
-  "Nahum", "Habakkuk", "Zephaniah", "Haggai", "Zechariah", "Malachi",
-  "Matthew", "Mark", "Luke", "John", "Acts",
-  "Romans", "1 Corinthians", "2 Corinthians", "Galatians", "Ephesians",
-  "Philippians", "Colossians", "1 Thessalonians", "2 Thessalonians",
-  "1 Timothy", "2 Timothy", "Titus", "Philemon",
-  "Hebrews", "James", "1 Peter", "2 Peter",
-  "1 John", "2 John", "3 John", "Jude", "Revelation"
-];
+Template.verses.helpers({
+	books: [
+			"Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy",
+		  "Joshua", "Judges", "Ruth", "1 Samuel", "2 Samuel",
+			"1 Kings", "2 Kings", "1 Chronicles", "2 Chronicles",
+		  "Ezra", "Nehemiah", "Esther",
+		  "Job", "Psalm", "Proverbs", "Ecclesiastes", "Song of Songs",
+		  "Isaiah", "Jeremiah", "Lamentations", "Ezekiel", "Daniel",
+		  "Hosea", "Joel", "Amos", "Obadiah", "Jonah", "Micah",
+		  "Nahum", "Habakkuk", "Zephaniah", "Haggai", "Zechariah", "Malachi",
+		  "Matthew", "Mark", "Luke", "John", "Acts",
+		  "Romans", "1 Corinthians", "2 Corinthians", "Galatians", "Ephesians",
+		  "Philippians", "Colossians", "1 Thessalonians", "2 Thessalonians",
+		  "1 Timothy", "2 Timothy", "Titus", "Philemon",
+		  "Hebrews", "James", "1 Peter", "2 Peter",
+		  "1 John", "2 John", "3 John", "Jude", "Revelation"
+	],
+	book: function() {
+		return this;
+	},
+	verses: function() {
+		//TODO: deny client find on console?
+		if(userId) {
+			// set goal stat?
+			Session.set('memCount', Verses.find({owner: userId, memorized: {$gt: 0}}).count());
+			Session.set('totalCount', Verses.find({owner: userId}).count());
 
-Template.verses.book = function() {
-	return this;
-};
+			var selector = {owner: userId};
+			var tagFilter = Session.get('tagFilter');
+			var memFilter = Session.get('memorizedFilter');
+			var searchFilter = Session.get('search');
+			var bookFilter = Session.get('bookFilter');
+			
+			if(tagFilter !== 'All')
+				selector.tags = tagFilter;
 
-Template.verses.verses = function() {
-	//TODO: deny client find on console?
-	if(userId) {
-		// set goal stat?
-		Session.set('memCount', Verses.find({owner: userId, memorized: {$gt: 0}}).count());
-		Session.set('totalCount', Verses.find({owner: userId}).count());
+			if(memFilter === 'All')
+				selector.memorized = {$gte: 0};
+			else if(memFilter === 'New')
+				selector.memorized = 0;
+			else
+				selector.memorized = {$gt: 0};
 
-		var selector = {owner: userId};
-		var tagFilter = Session.get('tagFilter');
-		var memFilter = Session.get('memorizedFilter');
-		var searchFilter = Session.get('search');
-		var bookFilter = Session.get('bookFilter');
-		
-		if(tagFilter !== 'All')
-			selector.tags = tagFilter;
+			if(searchFilter) 
+				selector.content = {$regex: searchFilter, $options: 'i'};
+				//selector.content = "/.*" + searchFilter + ".*/i";
 
-		if(memFilter === 'All')
-			selector.memorized = {$gte: 0};
-		else if(memFilter === 'New')
-			selector.memorized = 0;
-		else
-			selector.memorized = {$gt: 0};
+			if(bookFilter) 
+				selector.title = {$regex: bookFilter};
 
-		if(searchFilter) 
-			selector.content = {$regex: searchFilter, $options: 'i'};
-			//selector.content = "/.*" + searchFilter + ".*/i";
+			Session.set('verseCount', Verses.find(selector).count());
 
-		if(bookFilter) 
-			selector.title = {$regex: bookFilter};
-
-		Session.set('verseCount', Verses.find(selector).count());
-
-		return Verses.find(selector, {sort: {created_at: -1}});
+			return Verses.find(selector, {sort: {created_at: -1}});
+		}
 	}
-};
+});
 
 Template.verses.events({
-	'click .search-term': function() {
-		Session.set('search', null);
-	},
 	'change #book': function(evt, tmpl) {
 		var book = tmpl.find('#book').value;
 		if(book === "")
@@ -189,24 +186,23 @@ function diffText(text1, text2) {
 	return dmp.diff_prettyHtml(d);
 };
 
-Template.verse.verseTags = function() {
-	var verse_id = this._id;
-	return _.map(this.tags || [], function(tag) {
-		return {verse_id: verse_id, tag: tag};
-	});
-};
-
-Template.verse.tag = function() {
-	return this.tag;
-}
-
-Template.verse.memorization = function() {
-	return this.memorized_at;
-}
-
-Template.verse.addingTag = function() {
-	return Session.equals('editingAddTag', this._id);
-};
+Template.verse.helpers({
+	verseTags: function() {
+		var verse_id = this._id;
+		return _.map(this.tags || [], function(tag) {
+			return {verse_id: verse_id, tag: tag};
+		});
+	},
+	tag: function() {
+		return this.tag;
+	},
+	memorization: function() {
+		return this.memorized_at;
+	},
+	addingTag: function() {
+		return Session.equals('editingAddTag', this._id);
+	}
+});
 
 Template.verse.events({
 	'click button.close': function() {
@@ -245,21 +241,23 @@ Template.verse.events(okCancelEvents(
 	}));
 
 //////// Memorization ///////////////
-Template.memorization.title = function() {
-	if(typeof Session.get('currentVerse') === 'undefined') {
-		return '';
-	} else {
-		return Session.get('currentVerse').title;
+Template.memorization.helpers({
+	title: function() {
+		if(typeof Session.get('currentVerse') === 'undefined') {
+			return '';
+		} else {
+			return Session.get('currentVerse').title;
+		}
+	},
+	diff: function() {
+		if(typeof Session.get('diff') === 'undefined') {
+			return '';
+		} else {
+			return new Handlebars.SafeString(Session.get('diff'));
+		}
 	}
-};
+});
 
-Template.memorization.diff = function() {
-	if(typeof Session.get('diff') === 'undefined') {
-		return '';
-	} else {
-		return new Handlebars.SafeString(Session.get('diff'));
-	}
-};
 
 Template.memorization.events = {
 	'click button#startOver': function() {
@@ -270,11 +268,8 @@ Template.memorization.events = {
 		var typedVerse = $("#typedVerse").val();
 		if(verse.content === typedVerse) {
 			Verses.update({_id: Session.get('currentVerse')._id}, 
-				{
-					/*
-					
-					$set: {last_memorized_at: (new Date()).getTime()}
-					*/
+				{				
+					//$set: {last_memorized_at: (new Date()).getTime()}	
 					$inc: {memorized: 1},
 					$push: {memorizations: {memorized_at: (new Date()).getTime()}}
 				});
@@ -303,44 +298,44 @@ Template.memorization.events = {
 ////////////////// Tag Filter ////////////////////
 
 // pick out the unquie tags from all verses
-Template.tag_filter.tags = function() {
-	/*
-	var tagInfos = [];
-	var totalCount = 0;
+Template.tag_filter.helpers({
+	tags: function() {
+		/*
+		var tagInfos = [];
+		var totalCount = 0;
 
-	Verses.find().forEach(function(verse){
-		_.each(verse.tags, function(tag) {
-			var tagInfo = _.find(tagInfos, function(x) { return x.tag === tag});
-			if(!tagInfo)
-				tagInfos.push({tag: tag, count: 1});
-			else
-				tagInfo.count++;
+		Verses.find().forEach(function(verse){
+			_.each(verse.tags, function(tag) {
+				var tagInfo = _.find(tagInfos, function(x) { return x.tag === tag});
+				if(!tagInfo)
+					tagInfos.push({tag: tag, count: 1});
+				else
+					tagInfo.count++;
+			});
+			totalCount++;
 		});
-		totalCount++;
-	});
 
-	tagInfos.unshift({tag: null, count: totalCount});
-	return tagInfos;
-	*/
-	var tags = [];
-	Verses.find({owner: userId}).forEach(function(verse) {
-		_.each(verse.tags, function(tag) {
-			if(tags.indexOf(tag) === -1)
-				tags.push(tag);
+		tagInfos.unshift({tag: null, count: totalCount});
+		return tagInfos;
+		*/
+		var tags = [];
+		Verses.find({owner: userId}).forEach(function(verse) {
+			_.each(verse.tags, function(tag) {
+				if(tags.indexOf(tag) === -1)
+					tags.push(tag);
+			});
 		});
-	});
-	tags = _.sortBy(tags, function(x) {return x;});
-	tags.unshift("All");
-	return tags;
-};
-
-Template.tag_filter.tag = function() {
-	return this;
-};
-
-Template.tag_filter.selected = function() {
-	return Session.equals('tagFilter', String(this)) ? 'primary' : 'default';
-};
+		tags = _.sortBy(tags, function(x) {return x;});
+		tags.unshift("All");
+		return tags;
+	},
+	tag: function() {
+		return this;
+	},
+	selected: function() {
+		return Session.equals('tagFilter', String(this)) ? 'primary' : 'default';
+	}
+});
 
 Template.tag_filter.events({
 	'mousedown .tag': function() {
@@ -353,25 +348,26 @@ Template.tag_filter.events({
 
 ///////////////// Mem Filter /////////////////////
 
-Template.mem_filter.tags = ['All', 'Star', 'New'];
-
-Template.mem_filter.tag = function() {
-	return this;
-};
-
-Template.mem_filter.selected = function() {
-	return Session.equals('memorizedFilter', String(this)) ? 'success' : 'default';
-};
-
-Template.mem_filter.search = function() {
-	return Session.get('search');
-};
-
-Template.mem_filter.count = function() {
-	return Session.get('verseCount');
-};
+Template.mem_filter.helpers({
+	tags: ['All', 'Star', 'New'],
+	tag: function() {
+		return this;
+	},
+	selected: function() {
+		return Session.equals('memorizedFilter', String(this)) ? 'success' : 'default';
+	},
+	search: function() {
+		return Session.get('search');
+	},
+	count: function() {
+		return Session.get('verseCount');
+	}
+});
 
 Template.mem_filter.events({
+	'click .search-term': function() {
+		Session.set('search', null);
+	},
 	'mousedown .tag': function() {
 		if(Session.equals('memorizedFilter', String(this)))
 			Session.set('memorizedFilter', 'All');
@@ -397,8 +393,23 @@ Template.goal.helpers({
 	}
 });
 
+/******************** jQuery ****************************/
+$(document).ready(function() {
+/******************** Back to Top Link ******************/
+// Only enable if the document has long scroll bar
+	$(window).scroll(function() {
+		if($(this).scrollTop() > 200) {
+	 		$('#top-link').removeClass('hidden');
+	 	} else {
+	 		$('#top-link').addClass('hidden');
+	 	}
+	});
 
-
+	$('#top-link').click(function() {
+		$('html, body').animate({ scrollTop: 0}, 800);
+		return false;
+	});
+});
 /*
 Meteor.call("getESV", function(err, res) {
 		Session.set('v', res.content);

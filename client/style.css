@@ -75,6 +75,12 @@ body {
 }
 
 /*********** my css ******************/
+#top-link {
+  position: fixed;
+  bottom: 30px;
+  right: 50px;
+}
+
 .filter {
   padding-bottom: 10px;
 }
@@ -166,6 +172,10 @@ ul.tags {
 
 .tag:hover .remove-tag {
   display: inline;
+}
+
+.search-term:hover {
+  text-decoration: line-through;
 }
 
 .add-tag {

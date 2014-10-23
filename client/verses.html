@@ -30,6 +30,7 @@
           {{> mem_filter}}
           {{> verses}}
         </div>
+        
 
         {{> memorization}}
       {{else}}
@@ -41,6 +42,8 @@
       </div>
 
     </div> <!-- /container -->
+    {{> top_link}}
+
   <!-- Bootstrap core JavaScript
   ================================================== -->
   <!-- Placed at the end of the document so the pages load faster -->
@@ -174,10 +177,23 @@
       </li>
       {{/each}}
       <li>
-        <span class="search-term pointer"><u><em>{{search}}</em></u></span> Results: <strong>{{count}}</strong>
+        <span class="search-term pointer">
+          <em>{{search}}</em>
+        </span>      
+      </li>
+      <li>
+        Results: <strong>{{count}}</strong>
       </li>
     </ul>
   </div>
+</template>
+
+<template name="top_link">
+  <span id="top-link" class="hidden">
+    <a href="#" class="well well-sm">
+      <i class="glyphicon glyphicon-chevron-up"></i> Back to Top
+    </a>
+  </span>
 </template>
 
 <template name="about">
