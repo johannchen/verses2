@@ -18,6 +18,8 @@ Session.setDefault('bookFilter', null);
 Session.setDefault('memCount', 0);
 // total verses count
 Session.setDefault('totalCount', 0);
+// tagList
+Session.setDefault('tagList', []);
 
 var userId = Meteor.userId();
 
@@ -204,6 +206,12 @@ Template.verse.helpers({
 	},
 	addingTag: function() {
 		return Session.equals('editingAddTag', this._id);
+	},
+	dropdownTags: function() {
+		return Session.get('tagList');
+	},
+	dropdownTag: function() {
+		return this;
 	}
 });
 
@@ -303,24 +311,6 @@ Template.memorization.events = {
 // pick out the unquie tags from all verses
 Template.tag_filter.helpers({
 	tags: function() {
-		/*
-		var tagInfos = [];
-		var totalCount = 0;
-
-		Verses.find().forEach(function(verse){
-			_.each(verse.tags, function(tag) {
-				var tagInfo = _.find(tagInfos, function(x) { return x.tag === tag});
-				if(!tagInfo)
-					tagInfos.push({tag: tag, count: 1});
-				else
-					tagInfo.count++;
-			});
-			totalCount++;
-		});
-
-		tagInfos.unshift({tag: null, count: totalCount});
-		return tagInfos;
-		*/
 		var tags = [];
 		Verses.find({owner: userId}).forEach(function(verse) {
 			_.each(verse.tags, function(tag) {
@@ -329,6 +319,7 @@ Template.tag_filter.helpers({
 			});
 		});
 		tags = _.sortBy(tags, function(x) {return x;});
+		Session.set('tagList', tags);
 		tags.unshift("All");
 		return tags;
 	},
