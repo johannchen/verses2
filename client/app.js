@@ -101,6 +101,7 @@ Template.verses.helpers({
 			Session.set('totalCount', Verses.find({owner: userId}).count());
 
 			var selector = {owner: userId};
+			var sortOrder = {created_at: -1};
 			var tagFilter = Session.get('tagFilter');
 			var memFilter = Session.get('memorizedFilter');
 			var searchFilter = Session.get('search');
@@ -120,12 +121,14 @@ Template.verses.helpers({
 				selector.content = {$regex: searchFilter, $options: 'i'};
 				//selector.content = "/.*" + searchFilter + ".*/i";
 
-			if(bookFilter) 
+			if(bookFilter) {
 				selector.title = {$regex: bookFilter};
+				sortOrder = {title: 1};
+			}
 
 			Session.set('verseCount', Verses.find(selector).count());
 
-			return Verses.find(selector, {sort: {created_at: -1}});
+			return Verses.find(selector, {sort: sortOrder});
 		}
 	}
 });
