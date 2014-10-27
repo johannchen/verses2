@@ -1,0 +1,31 @@
+<template name="verses">
+  <div class="row">
+    <div class="col-lg-3">
+      <select class="form-control" id="book">
+        <option value="">Bible</option>
+        {{#each books}}
+          <option value="{{book}}">{{book}}</option>
+        {{/each}}
+      </select>
+    </div>
+    <div class="col-lg-3">
+      <input type="text" class="form-control" id="search" placeholder="Search Verses">
+    </div>
+    <div class="col-lg-6">
+      <input type="text" class="form-control" id="new-verse" list="bible" placeholder="New Verse (e.g. Romans 12:1-2)">
+      <datalist id="bible">
+        {{#each books}}
+          <option value="{{book}}"></option>
+        {{/each}}
+      </datalist>
+    </div>
+  </div>
+
+  {{> flashMessages}}
+  
+  <div class="row marketing">   
+    {{#each verses}}
+      {{> verse}}
+    {{/each}}     
+  </div>
+</template>

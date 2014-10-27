@@ -1,0 +1,20 @@
+<template name="mem_filter">
+  <div id="mem-filter" class="filter">
+    <ul class="list-inline tags">
+      {{#each tags}}
+      <li>
+        <span class="label label-{{selected}} pointer tag">{{tag}}
+        </span>
+      </li>
+      {{/each}}
+      <li>
+        <span class="search-term pointer">
+          <em>{{search}}</em>
+        </span>      
+      </li>
+      <li>
+        Results: <strong>{{count}}</strong>
+      </li>
+    </ul>
+  </div>
+</template>

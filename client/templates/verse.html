@@ -1,0 +1,40 @@
+<template name="verse">
+  <div class="col-lg-12">
+    <article class="thumbnail mverse{{memorized}}">
+      <header class="verse-header">
+        <strong>{{title}}</strong>
+        {{#if addingTag}}
+          <span class="add-tag"><input type="text" id="newTag" list="tag-list" placeholder="new tag" value="" /></span>
+          <datalist id="tag-list">
+          {{#each dropdownTags}}
+            <option value="{{dropdownTag}}"></option>
+          {{/each}}
+        </datalist>
+        {{else}}
+          <span class="glyphicon glyphicon-th-large pointer add-tag" title="add tag"></span>
+        {{/if}}
+        <ul class="list-inline tags">
+          {{#each verseTags}}
+            <li>
+              <span class="label label-primary tag">{{tag}}
+                <span class="pointer remove-tag">&times;</span>
+              </span>
+            </li>
+          {{/each}}          
+        </ul>
+        <button type="button" class="close"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>    
+      </header>
+      <p>{{content}}</p>
+      <p>
+        <a href="#" class="btn btn-default btn-xs memorize" title="to memorize" data-toggle="modal" data-target="#verseModal"><span class="glyphicon glyphicon-star"></span> {{memorized}}</a>
+        <ul class="list-inline stars">
+          {{#each memorizations}}
+            <li>
+              <span class="glyphicon glyphicon-star-empty" title="memorized at {{formatDate memorization "long"}}"></span>
+            </li>
+          {{/each}}
+        </ul>       
+      </p> 
+    </article>
+  </div>
+</template>
