@@ -31,7 +31,7 @@
           {{> verses}}
         </div>
         
-
+        {{> goal_setting}}
         {{> memorization}}
       {{else}}
         {{> mission}}
@@ -154,13 +154,41 @@
   </div>
 </template>
 
-<template name="goal">
+<template name="goal">    
   <div class="progress">
     <div class="progress-bar" role="progressbar" aria-valuenow="{{memCount}}" aria-valuemin="0" aria-valuemax="{{total}}" style="width: {{percentage}}%;">
-      {{percentage}}% Starred
+      <span class="pointer set-goal">{{percentage}}% >= {{starNumber}} Starred</span>
     </div>
   </div>
-</template>   
+</template>  
+
+<template name="goal_setting">
+ <!-- Modal -->
+  <div class="modal fade" id="goalModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title" id="myModalLabel">Set Goal</h4>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal">
+            <div class="form-group">
+              <label for="starNumber" class="col-sm-2 control-label">Stars</label>
+              <div class="col-sm-2">
+                <input type="number" class="form-control" id="starNumber" min="1" value="{{stars}}">
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" id="submitGoal">Submit</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template> 
 
 <template name="tag_filter">
   <div id="tag-filter" class="filter">
@@ -201,7 +229,7 @@
 <template name="top_link">
   <span id="top-link" class="hidden">
     <a href="#" class="well well-sm">
-      <i class="glyphicon glyphicon-chevron-up"></i> Back to Top
+      <i class="glyphicon glyphicon-chevron-up"></i> Scroll to Top
     </a>
   </span>
 </template>

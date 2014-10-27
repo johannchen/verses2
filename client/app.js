@@ -14,6 +14,8 @@ Session.setDefault('memorizedFilter', 'All');
 Session.setDefault('search', null);
 // Book Filter
 Session.setDefault('bookFilter', null);
+// stars
+Session.setDefault('stars', 1);
 // memorized count
 Session.setDefault('memCount', 0);
 // total verses count
@@ -98,10 +100,6 @@ Template.verses.helpers({
 	verses: function() {
 		//TODO: deny client find on console?
 		if(userId) {
-			// set goal stat?
-			Session.set('memCount', Verses.find({owner: userId, memorized: {$gt: 0}}).count());
-			Session.set('totalCount', Verses.find({owner: userId}).count());
-
 			var selector = {owner: userId};
 			var sortOrder = {created_at: -1};
 			var tagFilter = Session.get('tagFilter');
@@ -370,11 +368,20 @@ Template.mem_filter.events({
 	}
 });
 
+
+/***************** Goal ************************/
 Template.goal.helpers({
+	starNumber: function() {
+		return Session.get('stars');
+	},
 	memCount: function() {
+		//set defalut memCount
+		var stars = parseInt(Session.get('stars'));
+		Session.set('memCount', Verses.find({owner: userId, memorized: {$gte: stars}}).count());			
 		return Session.get('memCount');
 	},
 	total: function() {
+		Session.set('totalCount', Verses.find({owner: userId}).count());
 		return Session.get('totalCount');
 	},
 	percentage: function() {
@@ -386,6 +393,29 @@ Template.goal.helpers({
 		return Math.round(memCount / totalCount * 100);
 	}
 });
+
+Template.goal.events({
+	'click .set-goal': function() {
+		$('#goalModal').modal('toggle');
+	}
+});
+
+Template.goal_setting.helpers({
+	stars: function() {
+		return Session.get('stars');
+	}
+});
+
+Template.goal_setting.events({
+	'click button#submitGoal': function(){
+		var starNumber = $("#starNumber").val();
+		console.log(starNumber);
+		Session.set('stars', starNumber);
+		// close modal
+		$("#goalModal").modal('hide');
+	}
+});
+
 
 /******************** jQuery ****************************/
 $(document).ready(function() {
