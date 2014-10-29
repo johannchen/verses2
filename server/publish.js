@@ -1,6 +1,7 @@
 
-Meteor.publish('verses', function() {
-	return Verses.find();
+Meteor.publish('verses', function() {	
+	// publish only login user verses
+	return Verses.find({owner: this.userId});
 });
 
 Meteor.methods({

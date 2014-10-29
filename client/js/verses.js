@@ -75,6 +75,7 @@ Template.verses.events(okCancelEvents(
 		ok: function(text, evt) {
 			var verse = Verses.findOne({owner: userId, title: text});
 			if(typeof verse === 'undefined') {
+				//TODO: get ESV from mongo
 				Meteor.call("getESV", text, function(err, res) {
 					var v = res.content.trim().replace(/\s{2,}/g, ' ');
 					Session.set('v', v);
