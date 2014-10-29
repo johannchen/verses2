@@ -2,7 +2,7 @@
 
 var DateFormats = {
 	short: "MMMM DD, YYYY",
-	long: "dddd DD.MM.YYYY HH:mm"
+	long: "dddd MM.DD.YYYY HH:mm"
 };
 
 UI.registerHelper("formatDate", function(datetime, format){
