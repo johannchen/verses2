@@ -46,7 +46,6 @@ Template.verses.helpers({
 			else if(memFilter === 'This Week Star') {
 				selector.memorized = {$gt: 0};
 				var startOfWeek = moment().startOf('week').valueOf();
-				console.log(startOfWeek);
 				selector.memorizations = {$elemMatch: {memorized_at: {$gte: startOfWeek}}}; 
 		
 			}

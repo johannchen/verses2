@@ -1,8 +1,13 @@
 <template name="goal">    
   <div class="progress">
     <div class="progress-bar" role="progressbar" aria-valuenow="{{memCount}}" aria-valuemin="0" aria-valuemax="{{total}}" style="width: {{percentage}}%;">
-      <span class="pointer set-goal">{{percentage}}% >= {{starNumber}} Starred</span>
+      <span class="pointer set-goal">{{percentage}}% >= {{starNumber}} Star</span>
     </div>
   </div>
+  <div class="progress">
+	  <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{starNow}}" aria-valuemin="0" aria-valuemax="{{starMax}}" style="width: {{weekProgress}}%">
+	    <span class="pointer set-goal">{{weekProgress}}% {{starNow}}/{{starMax}} Weekly</span>
+	  </div>
+	</div>
 </template>  
 

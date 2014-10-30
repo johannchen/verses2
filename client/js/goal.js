@@ -4,6 +4,11 @@ Session.setDefault('stars', 1);
 Session.setDefault('memCount', 0);
 // total verses count
 Session.setDefault('totalCount', 0);
+// stars of the week
+Session.setDefault('starNow', 0);
+// max stars of the week
+Session.setDefault('starMax', 10);
+
 
 var userId = Meteor.userId();
 
@@ -28,6 +33,23 @@ Template.goal.helpers({
 		if(memCount === 0)
 			return 0;
 		return Math.round(memCount / totalCount * 100);
+	},
+	starMax: function() {
+		return Session.get('starMax');
+	},
+	starNow: function() {
+		var startOfWeek = moment().startOf('week').valueOf();
+		Session.set('starNow', Verses.find({owner: userId, 
+					memorizations: {$elemMatch: {memorized_at: {$gte: startOfWeek}}}
+				}).count()); 		
+		return Session.get('starNow');
+	},
+	weekProgress: function() {
+		var starNow = Session.get('starNow');
+		var starMax = Session.get('starMax');
+		if(starNow === 0)
+			return 0;
+		return Math.round(starNow / starMax * 100);
 	}
 });
 
