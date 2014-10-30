@@ -81,22 +81,20 @@ Template.verses.events(okCancelEvents(
 	'#new-verse',
 	{
 		ok: function(text, evt) {
+			var userId = Meteor.userId();
 			var verse = Verses.findOne({owner: userId, title: text});
 			if(typeof verse === 'undefined') {
 				//TODO: get ESV from mongo
 				Meteor.call("getESV", text, function(err, res) {
 					var v = res.content.trim().replace(/\s{2,}/g, ' ');
 					Session.set('v', v);
-
-					//setTimeout(function() {
-						Verses.insert({
-							owner: userId,
-							title: text,
-							content: Session.get('v'),
-							memorized: 0,
-							created_at: (new Date()).getTime()
-						});
-					//}, 1000);
+					Verses.insert({
+						owner: userId,
+						title: text,
+						content: Session.get('v'),
+						memorized: 0,
+						created_at: (new Date()).getTime()
+					});		
 				});
 			} else {
 				FlashMessages.sendWarning("The verses already exist!");
