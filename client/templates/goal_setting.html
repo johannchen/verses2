@@ -6,24 +6,25 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-          <h4 class="modal-title" id="myModalLabel">Set Goal</h4>
+          <h4 class="modal-title" id="myModalLabel">Set My Goal</h4>
         </div>
         <div class="modal-body">
           <form class="form-horizontal">
             <div class="form-group">
-              <div class="col-sm-2">
-                <input type="number" class="form-control" id="starNumber" min="1" value="{{stars}}">
-              </div>
+              <label for="starNumber" class="col-sm-2 control-label">
+                Blue bar
+              </label>
               <div class="col-sm-10">
-                <p class="form-control-static"> stars of every set of verses (blue progress)</p>
+                <p class="form-control-static"> Show percentage of verses with at least <input type="number" size="2" id="starNumber" min="1" max="10" value="{{stars}}"> stars</p>
               </div>
             </div>
             <div class="form-group">
-              <div class="col-sm-2">
-                <input type="number" class="form-control" id="starMax" min="1" value="{{starMax}}">
-              </div>
+              <label for="starMax" class="col-sm-2 control-label">
+                Green bar
+              </label>
               <div class="col-sm-10">
-                <p class="form-control-static"> unique set of verses to star weekly (green progress)</p>
+                <p class="form-control-static"> My goal is to correctly type <input type="number" size="2" id="starMax" min="1" max="50" value="{{starMax}}"> different verses per week
+                </p>
               </div>
             </div>
           </form>

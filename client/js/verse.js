@@ -13,7 +13,13 @@ Template.verse.helpers({
 	tag: function() {
 		return this.tag;
 	},
-	memorization: function() {
+	stars: function() {
+		var stars = this.memorizations;
+		if (stars)
+			return stars.reverse().slice(0, 5);
+		return stars;
+	},
+	star: function() {
 		return this.memorized_at;
 	},
 	addingTag: function() {
