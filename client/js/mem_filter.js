@@ -2,7 +2,7 @@
 Session.setDefault('memorizedFilter', 'All');
 
 Template.mem_filter.helpers({
-	tags: ['All', 'Stars', 'New', 'This Week Stars'],
+	tags: ['All', 'New', 'Stars', 'This Week Stars', 'Before This Week Stars'],
 	tag: function() {
 		return this;
 	},

@@ -33,6 +33,7 @@ Template.verses.helpers({
 			var memFilter = Session.get('memorizedFilter');
 			var searchFilter = Session.get('search');
 			var bookFilter = Session.get('bookFilter');
+			var startOfWeek = moment().startOf('week').valueOf();
 			
 			if(tagFilter !== 'All')
 				selector.tags = tagFilter;
@@ -43,11 +44,11 @@ Template.verses.helpers({
 				selector.memorized = 0;
 			else if(memFilter === 'Stars')
 				selector.memorized = {$gt: 0};
-			else if(memFilter === 'This Week Stars') {
-				selector.memorized = {$gt: 0};
-				var startOfWeek = moment().startOf('week').valueOf();
+			else if(memFilter === 'This Week Stars') 
 				selector.memorizations = {$elemMatch: {memorized_at: {$gte: startOfWeek}}}; 
-		
+			else if(memFilter === 'Before This Week Stars') {
+				selector.memorized = {$gt: 0};
+				selector.memorizations = {$not: {$elemMatch: {memorized_at: {$gte: startOfWeek}}}}; 
 			}
 
 
